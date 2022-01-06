@@ -1,11 +1,10 @@
 // ==UserScript==
 // @name         Fuck Online Courses
 // @namespace    https://chikie920.github.io/
-// @version      1.0
+// @version      1.5
 // @description  摸鱼是第一生产力
 // @author       Chikie
 // @match        http://172-17-1-200-8080-p.webvpn.wbu.edu.cn:8118/integration/v2/*
-// @require      https://cdn.jsdelivr.net/gh/colxi/getEventListeners/src/getEventListeners.min.js
 // @grant        unsafeWindow
 // @grant        GM_setValue
 // @grant        GM_getValue
