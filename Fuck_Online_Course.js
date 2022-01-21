@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Fuck Online Courses
+// @name         Fuck Online Courses Official Version
 // @namespace    https://chikie920.github.io/
 // @version      1.5
 // @description  摸鱼是第一生产力
@@ -16,9 +16,10 @@
 'use strict'
 
 // Settings
-let begin = 0
+let begin = 0;
 let counts;
 let default_wait_time = 10;
+let remind_time = 30;
 let url_one = /courseOutlineStudent/i;
 let url_two = /courseDetailStudent/i;
 let url_three = /studyCenter/i;
@@ -70,30 +71,32 @@ function remove_judge() {
 }
 
 function start_study() {
+    let flag = 0;
     let button = document.getElementsByClassName('btn btn-primary btn-sm handleBtn')[0];
     button.click();
     let check_load = setInterval(() => {
         if(check_load_three() && document.getElementsByClassName('xdyplayer dplayer-loading').length == 0){
-            clearInterval(check_load);
-            unsafeWindow.goPaly();
-            unsafeWindow.window.ins.play();
+            // unsafeWindow.window.ins.play();
+            flag = 1;
             remove_judge();
             volume();
+            unsafeWindow.goPaly();
             clearInterval(check_load);
-            let remind_time = get_time();
-            let back_to_list = setInterval(stay(), remind_time*1000);
-            function stay() {
-                if(document.getElementById('remainingTime').innerHTML == '00:01'){
-                    document.getElementsByClassName('backLink pull-right')[0].click();
-                    unsafeWindow.saveVideoRecord(0);
-                    clearInterval(back_to_list);
-                } else {
-                    clearInterval(back_to_list);
-                    back_to_list = setInterval(stay(), default_wait_time*1000);
-                }
-            }
         }
     }, 2000);
+
+    let back_to_list = setInterval(() => {
+        if(document.getElementById('remainingTime').innerHTML != '00:00' && document.getElementsByClassName('play-played')[0].style.width == '100%'){
+            document.getElementsByClassName('play-played')[0].click();
+            unsafeWindow.goPaly();
+        }
+        if(flag == 1 && document.getElementById('remainingTime').innerHTML == '00:00'){
+            // unsafeWindow.saveVideoRecord(0);
+            document.getElementsByClassName('backLink pull-right')[0].click();
+            clearInterval(back_to_list);
+        }
+    }, remind_time*1000);
+    
 }
 
 function get_time() {
@@ -112,7 +115,7 @@ function get_list() {
 }
 
 function wait_a_minute() {
-    if(document.getElementsByClassName('fyj_status_span').length == 1){ 
+    if(document.getElementsByClassName('fyj_status_span').length == 1 && document.getElementsByClassName('fyj_status_span')[0].innerHTML == '已完成'){ 
         document.getElementsByClassName('backLink pull-right')[0].click();
     } else {
         start_study();
